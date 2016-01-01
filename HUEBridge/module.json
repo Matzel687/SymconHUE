@@ -5,7 +5,7 @@
   "vendor": "Philips Hue",
   "aliases": [ "Philips Hue Bridge" ],
   "parentRequirements": [],
-  "childRequirements": [ "{0046C3E1-28E6-40CF-9358-4C992F58F9EE}" ],
+  "childRequirements": [ "{0046C3E1-28E6-40CF-9358-4C992F58F9EE}", "{957A95A7-FB08-4837-BD69-9B55C84481E0}" ],
   "implemented": [ "{D792637E-79F8-4EB0-ABC4-A641C2F4CC3B}" ],
   "prefix": "HUE"
 }

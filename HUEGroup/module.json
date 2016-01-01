@@ -1,0 +1,11 @@
+{
+  "id": "{BF55A547-FE03-45A7-8BC6-C4D2E8D45537}",
+  "name": "HUEGroup",
+  "type": 3,
+  "vendor": "Philips Hue",
+  "aliases": [ "Philips Hue Group" ],
+  "parentRequirements": [ "{D792637E-79F8-4EB0-ABC4-A641C2F4CC3B}" ],
+  "childRequirements": [],
+  "implemented": [ "{957A95A7-FB08-4837-BD69-9B55C84481E0}" ],
+  "prefix": "HUE"
+}

@@ -5,12 +5,14 @@ class HUEBridge extends IPSModule {
   private $Host = "";
   private $User = "";
   private $LightsCategory = 0;
+  private $GroupsCategory = 0;
 
   public function Create() {
     parent::Create();
     $this->RegisterPropertyString("Host", "");
     $this->RegisterPropertyString("User", "SymconHUE");
     $this->RegisterPropertyInteger("LightsCategory", 0);
+    $this->RegisterPropertyInteger("GroupsCategory", 0);
     $this->RegisterPropertyInteger("UpdateInterval", 5);
   }
 
@@ -77,6 +79,11 @@ class HUEBridge extends IPSModule {
   private function GetLightsCategory() {
     if($this->LightsCategory == '') $this->LightsCategory = $this->ReadPropertyString('LightsCategory');
     return $this->LightsCategory;
+  }
+
+  private function GetGroupsCategory() {
+    if($this->GroupsCategory == '') $this->GroupsCategory = $this->ReadPropertyString('GroupsCategory');
+    return $this->GroupsCategory;
   }
 
   private function GetHost() {
@@ -186,7 +193,7 @@ class HUEBridge extends IPSModule {
           $deviceId = $this->GetDeviceByUniqueId($uniqueId);
 
           if ($deviceId == 0) {
-            $deviceId = IPS_CreateInstance($this->DeviceGuid());
+            $deviceId = IPS_CreateInstance($this->LightGuid());
             IPS_SetProperty($deviceId, 'UniqueId', $uniqueId);
           }
 
@@ -204,11 +211,18 @@ class HUEBridge extends IPSModule {
           HUE_RequestData($deviceId);
         }
       }
-      return true;
     } else {
       echo 'Lampen konnten nicht syncronisiert werden, da die Lampenkategorie nicht zugewiesen wurde.';
       IPS_LogMessage('SymconHUE', 'Lampen konnten nicht syncronisiert werden, da die Lampenkategorie nicht zugewiesen wurde.');
-      return false;
+    }
+
+    $groupsCategoryId = $this->GetGroupsCategory();
+    if(@$groupsCategoryId > 0) {
+      $groups = $this->Request('/groups');
+      print_r($groups);
+    } else {
+      echo 'Gruppen konnten nicht syncronisiert werden, da die Gruppenkategorie nicht zugewiesen wurde.';
+      IPS_LogMessage('SymconHUE', 'Gruppen konnten nicht syncronisiert werden, da die Gruppenkategorie nicht zugewiesen wurde.');
     }
   }
 
@@ -232,7 +246,7 @@ class HUEBridge extends IPSModule {
    * Liefert zu einer UniqueID die passende Lampeninstanz
    */
   public function GetDeviceByUniqueId($uniqueId) {
-    $deviceIds = IPS_GetInstanceListByModuleID($this->DeviceGuid());
+    $deviceIds = IPS_GetInstanceListByModuleID($this->LightGuid());
     foreach($deviceIds as $deviceId) {
       if(IPS_GetProperty($deviceId, 'UniqueId') == $uniqueId) {
         return $deviceId;
@@ -240,8 +254,12 @@ class HUEBridge extends IPSModule {
     }
   }
 
-  private function DeviceGuid() {
+  private function LightGuid() {
     return '{729BE8EB-6624-4C6B-B9E5-6E09482A3E36}';
+  }
+
+  private function GroupGuid() {
+    return '{BF55A547-FE03-45A7-8BC6-C4D2E8D45537}';
   }
 
 }
